@@ -1,11 +1,17 @@
+export const metadata = {
+  title: "About | Profile Project",
+  description: "Learn more about this Next.js profile lab project.",
+};
+
 export default function AboutPage() {
   return (
-    <div>
-      <h1 className="text-3xl font-bold mb-4">About</h1>
+    <section>
+      <h2>About This Project</h2>
       <p>
-        This page was created as part of a lab to practice building a Next.js
-        application using the App Router.
+        This project was created for Lab 15 using the Next.js App Router. It
+        includes layouts, metadata, dynamic routes, loading states, and error
+        handling.
       </p>
-    </div>
+    </section>
   );
 }

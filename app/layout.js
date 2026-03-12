@@ -2,16 +2,27 @@ import "./globals.css";
 import NavBar from "../components/NavBar";
 
 export const metadata = {
-  title: "Next.js Lab",
-  description: "A simple Next.js lab project with navigation",
+  title: "Profile Project",
+  description: "A Next.js profile project using layouts and dynamic routes",
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <NavBar />
-        <main className="p-6">{children}</main>
+        <header className="site-header">
+          <h1>Profile Project</h1>
+          <NavBar />
+        </header>
+
+        <main className="container">{children}</main>
+
+        <footer className="site-footer">
+          <p>© 2026 Spencer Burse</p>
+        </footer>
       </body>
     </html>
   );
