@@ -1,64 +1,52 @@
 import styles from "./page.module.css";
 import Link from "next/link";
-import Filters from "@/components/Filters";
-import prisma from '@/app/lib/prisma'
+import prisma from "@/app/lib/prisma";
 
 export const runtime = "nodejs";
 
-async function fetchTitles() {
-  const data = await prisma.profiles.findMany({
-    distinct: ["title"],
-    select: { title: true },
-  });
-  return data ? data.map((t) => t.title) : [];
-}
-
-async function getData({ title, search }) {
+async function getData() {
   const profiles = await prisma.profiles.findMany({
-    where: {
-      ...(title && { title: { contains: title, mode: "insensitive" } }),
-      ...(search && { name: { contains: search, mode: "insensitive" } }),
+    orderBy: {
+      id: "desc",
     },
   });
+
   return profiles;
 }
 
-export default async function Home({ searchParams }) {
-  const searchParamsData = await searchParams;
-  const selectedTitle = searchParamsData?.title || "";
-  const search = searchParamsData?.search || "";
-
-  const [titles, profiles] = await Promise.all([
-    fetchTitles(),
-    getData({ title: selectedTitle, search }),
-  ]);
+export default async function Home() {
+  const profiles = await getData();
 
   return (
     <main className={styles.main}>
       <div className="section">
         <div className="container">
           <h1>Profile App</h1>
-          <Filters titles={titles} title={selectedTitle} search={search} />
+
+          <p style={{ marginBottom: "20px" }}>
+            <Link href="/add-profile">Add Profile</Link>
+          </p>
+
           {profiles.length === 0 ? (
             <p>No profiles found.</p>
           ) : (
             <div className="grid">
               {profiles.map((profile) => (
-                <Link key={profile.id} href={`/profile/${profile.id}`}>
-                  <div className={styles["profile-card"]}>
-                    <div className={styles["profile-card__image"]}>
-                      <img
-                        src={profile.image_url || "/vercel.svg"}
-                        alt={profile.name}
-                      />
-                    </div>
-                    <div className={styles["profile-card__content"]}>
-                      <p>{profile.name}</p>
-                      <p>{profile.title}</p>
-                      <p>{profile.email}</p>
-                    </div>
+                <div key={profile.id} className={styles["profile-card"]}>
+                  <div className={styles["profile-card__image"]}>
+                    <img
+                      src={profile.image_url || "/vercel.svg"}
+                      alt={profile.name}
+                    />
                   </div>
-                </Link>
+
+                  <div className={styles["profile-card__content"]}>
+                    <p><strong>{profile.name}</strong></p>
+                    <p>{profile.title}</p>
+                    <p>{profile.email}</p>
+                    <p>{profile.bio}</p>
+                  </div>
+                </div>
               ))}
             </div>
           )}
