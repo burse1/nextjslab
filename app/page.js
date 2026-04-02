@@ -1,75 +1,69 @@
-import ProfileCard from "../components/ProfileCard";
+import styles from "./page.module.css";
+import Link from "next/link";
+import Filters from "@/components/Filters";
+import prisma from '@/app/lib/prisma'
 
-export const metadata = {
-  title: "Home | Profile Project",
-  description: "Browse student profiles in this Next.js lab project.",
-};
+export const runtime = "nodejs";
 
-async function getProfiles() {
-  return [
-    {
-      id: 1,
-      slug: "alex-johnson",
-      name: "Alex Johnson",
-      major: "Computer Graphics Technology",
-      year: "Senior",
-      interest: "Web Development",
-    },
-    {
-      id: 2,
-      slug: "maria-lee",
-      name: "Maria Lee",
-      major: "Data Visualization",
-      year: "Junior",
-      interest: "Dashboard Design",
-    },
-    {
-      id: 3,
-      slug: "jordan-smith",
-      name: "Jordan Smith",
-      major: "UX Design",
-      year: "Sophomore",
-      interest: "User Research",
-    },
-  ];
+async function fetchTitles() {
+  const data = await prisma.profiles.findMany({
+    distinct: ["title"],
+    select: { title: true },
+  });
+  return data ? data.map((t) => t.title) : [];
 }
 
-export default async function HomePage({ searchParams }) {
-  const profiles = await getProfiles();
-  const { major } = await searchParams;
+async function getData({ title, search }) {
+  const profiles = await prisma.profiles.findMany({
+    where: {
+      ...(title && { title: { contains: title, mode: "insensitive" } }),
+      ...(search && { name: { contains: search, mode: "insensitive" } }),
+    },
+  });
+  return profiles;
+}
 
-  const filteredProfiles = major
-    ? profiles.filter(
-        (profile) => profile.major.toLowerCase() === major.toLowerCase()
-      )
-    : profiles;
+export default async function Home({ searchParams }) {
+  const searchParamsData = await searchParams;
+  const selectedTitle = searchParamsData?.title || "";
+  const search = searchParamsData?.search || "";
+
+  const [titles, profiles] = await Promise.all([
+    fetchTitles(),
+    getData({ title: selectedTitle, search }),
+  ]);
 
   return (
-    <section>
-      <h2>Student Profiles</h2>
-      <p className="intro">
-        This homepage is a Server Component that displays profile cards and
-        supports filtering with URL search parameters.
-      </p>
-
-      <div className="filters">
-        <a href="/">All</a>
-        <a href="/?major=Computer%20Graphics%20Technology">
-          Computer Graphics Technology
-        </a>
-        <a href="/?major=Data%20Visualization">Data Visualization</a>
-        <a href="/?major=UX%20Design">UX Design</a>
+    <main className={styles.main}>
+      <div className="section">
+        <div className="container">
+          <h1>Profile App</h1>
+          <Filters titles={titles} title={selectedTitle} search={search} />
+          {profiles.length === 0 ? (
+            <p>No profiles found.</p>
+          ) : (
+            <div className="grid">
+              {profiles.map((profile) => (
+                <Link key={profile.id} href={`/profile/${profile.id}`}>
+                  <div className={styles["profile-card"]}>
+                    <div className={styles["profile-card__image"]}>
+                      <img
+                        src={profile.image_url || "/vercel.svg"}
+                        alt={profile.name}
+                      />
+                    </div>
+                    <div className={styles["profile-card__content"]}>
+                      <p>{profile.name}</p>
+                      <p>{profile.title}</p>
+                      <p>{profile.email}</p>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
-
-      <div className="grid">
-        {filteredProfiles.length > 0 ? (
-          filteredProfiles.map((profile) => (
-            <ProfileCard key={profile.id} profile={profile} />
-          ))
-        ) : (
-          <p>No profiles matched that filter.</p>
-        )}
-      </div>
-    </section>
+    </main>
   );
 }
