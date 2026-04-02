@@ -1,8 +1,9 @@
 import styles from "./page.module.css";
 import Link from "next/link";
 import prisma from "@/app/lib/prisma";
-export const dynamic = "force-dynamic";
+
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 async function getData() {
   const profiles = await prisma.profiles.findMany({
