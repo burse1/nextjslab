@@ -39,6 +39,7 @@ export default async function Home() {
                       src={profile.image_url || "/vercel.svg"}
                       alt={profile.name}
                     />
+                    
                   </div>
 
                   <div className={styles["profile-card__content"]}>
@@ -46,6 +47,12 @@ export default async function Home() {
                     <p>{profile.title}</p>
                     <p>{profile.email}</p>
                     <p>{profile.bio}</p>
+                    <Link
+  href={`/profiles/${profile.id}/edit`}
+  className="edit-btn"
+>
+  Edit
+</Link>
                   </div>
                 </div>
               ))}
