@@ -1,0 +1,53 @@
+.formWrap {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.formWrap form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.formWrap input,
+.formWrap textarea,
+.formWrap button {
+  padding: 10px;
+  font-size: 16px;
+}
+
+.formWrap textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.previewImage {
+  width: 180px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+}
+
+.buttonRow {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.errorMessage {
+  color: red;
+  margin: 0;
+}
+
+.successMessage {
+  color: green;
+  margin: 0;
+}
+
+.deleteButton {
+  background: #b91c1c;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
