@@ -67,9 +67,9 @@ export async function POST(request) {
     }
 
     const blob = await put(imgFile.name, imgFile, {
-      access: "private",
-      allowOverwrite: true,
-    });
+  access: "public",
+  allowOverwrite: true,
+});
 
     const created = await prisma.profiles.create({
       data: {
