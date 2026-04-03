@@ -78,9 +78,9 @@ export async function PUT(request, { params }) {
       }
 
       const blob = await put(imgFile.name, imgFile, {
-        access: "private",
-        allowOverwrite: true,
-      });
+  access: "public",
+  allowOverwrite: true,
+});
 
       imageUrl = blob.url;
     }
