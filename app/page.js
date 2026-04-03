@@ -19,32 +19,47 @@ export default async function Home() {
   const profiles = await getData();
 
   return (
-    <main className={styles.page}>
-      <h1>Profile App</h1>
+    <main className={styles.main}>
+      <div className="section">
+        <div className="container">
+          <h1>Profile App</h1>
 
-      <Link href="/add-profile">Add Profile</Link>
+          <p style={{ marginBottom: "20px" }}>
+            <Link href="/add-profile">Add Profile</Link>
+          </p>
 
-      {profiles.length === 0 ? (
-        <p>No profiles found.</p>
-      ) : (
-        <div className={styles.grid}>
-          {profiles.map((profile) => (
-            <div key={profile.id} className={styles.card}>
-              <h2>{profile.name}</h2>
-              <p>{profile.title}</p>
-              <p>{profile.email}</p>
-              <p>{profile.bio}</p>
+          {profiles.length === 0 ? (
+            <p>No profiles found.</p>
+          ) : (
+            <div className="grid">
+              {profiles.map((profile) => (
+                <div key={profile.id} className={styles["profile-card"]}>
+                  <div className={styles["profile-card__image"]}>
+                    <img
+                      src={profile.image_url || "/vercel.svg"}
+                      alt={profile.name}
+                    />
+                    
+                  </div>
 
-              <Link
+                  <div className={styles["profile-card__content"]}>
+                    <p><strong>{profile.name}</strong></p>
+                    <p>{profile.title}</p>
+                    <p>{profile.email}</p>
+                    <p>{profile.bio}</p>
+                    <Link
                 href={`/edit-profile/${profile.id}`}
                 className={styles.editButton}
               >
                 Edit
               </Link>
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
+          )}
         </div>
-      )}
+      </div>
     </main>
   );
 }
