@@ -30,14 +30,14 @@ export async function GET(request, { params }) {
 
 export async function PUT(request, { params }) {
   try {
-    const id = Number(params.id);
+    const { id: idParam } = await params;
+    const id = Number(idParam);
 
     if (!id || Number.isNaN(id)) {
       return Response.json({ error: "Invalid profile id" }, { status: 400 });
     }
 
     const formData = await request.formData();
-
     const name = formData.get("name");
     const title = formData.get("title");
     const email = formData.get("email");
@@ -79,9 +79,9 @@ export async function PUT(request, { params }) {
       }
 
       const blob = await put(imgFile.name, imgFile, {
-  access: "public",
-  allowOverwrite: true,
-});
+        access: "public",
+        allowOverwrite: true,
+      });
 
       imageUrl = blob.url;
     }
@@ -111,7 +111,8 @@ export async function PUT(request, { params }) {
 
 export async function DELETE(request, { params }) {
   try {
-    const id = Number(params.id);
+    const { id: idParam } = await params;
+    const id = Number(idParam);
 
     if (!id || Number.isNaN(id)) {
       return Response.json({ error: "Invalid profile id" }, { status: 400 });
@@ -129,7 +130,10 @@ export async function DELETE(request, { params }) {
       where: { id },
     });
 
-    return Response.json({ message: "Profile deleted successfully" }, { status: 200 });
+    return Response.json(
+      { message: "Profile deleted successfully" },
+      { status: 200 }
+    );
   } catch (error) {
     console.error("Error deleting profile:", error);
     return Response.json({ error: "Failed to delete profile" }, { status: 500 });
