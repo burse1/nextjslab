@@ -23,7 +23,11 @@ export default async function EditProfilePage({ params }) {
   return (
     <main>
       <h1>Edit Profile</h1>
-      <ProfileForm profile={profile} />
+      <ProfileForm
+        mode="edit"
+        initialValues={profile}
+        profileId={profile.id}
+      />
     </main>
   );
 }
