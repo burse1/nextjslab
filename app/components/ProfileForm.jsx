@@ -12,27 +12,23 @@ const trimCollapse = (s) =>
 
 export default function ProfileForm({
   mode = "add",
-  initialValues = {
-    name: "",
-    title: "",
-    email: "",
-    bio: "",
-    image_url: "",
-  },
+  initialValues,
   profileId = null,
 }) {
   const router = useRouter();
   const nameRef = useRef(null);
 
   const [values, setValues] = useState({
-    name: "",
-    title: "",
-    email: "",
-    bio: "",
+    name: initialValues?.name || "",
+    title: initialValues?.title || "",
+    email: initialValues?.email || "",
+    bio: initialValues?.bio || "",
     img: null,
   });
 
-  const [currentImage, setCurrentImage] = useState("");
+  const [currentImage, setCurrentImage] = useState(
+    initialValues?.image_url || ""
+  );
   const [errors, setErrors] = useState("");
   const [success, setSuccess] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -40,16 +36,18 @@ export default function ProfileForm({
   const { name, title, email, bio, img } = values;
 
   useEffect(() => {
-    setValues({
-      name: initialValues.name || "",
-      title: initialValues.title || "",
-      email: initialValues.email || "",
-      bio: initialValues.bio || "",
-      img: null,
-    });
+    if (mode === "edit" && initialValues) {
+      setValues({
+        name: initialValues.name || "",
+        title: initialValues.title || "",
+        email: initialValues.email || "",
+        bio: initialValues.bio || "",
+        img: null,
+      });
 
-    setCurrentImage(initialValues.image_url || "");
-  }, [initialValues]);
+      setCurrentImage(initialValues.image_url || "");
+    }
+  }, [mode, initialValues]);
 
   useEffect(() => {
     if (nameRef.current) {
