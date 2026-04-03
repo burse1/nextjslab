@@ -6,7 +6,8 @@ export const dynamic = "force-dynamic";
 
 export async function GET(request, { params }) {
   try {
-    const id = Number(params.id);
+    const { id: idParam } = await params;
+    const id = Number(idParam);
 
     if (!id || Number.isNaN(id)) {
       return Response.json({ error: "Invalid profile id" }, { status: 400 });

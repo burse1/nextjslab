@@ -5,36 +5,25 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export default async function EditProfilePage({ params }) {
-  const id = Number(params.id);
+  const { id: idParam } = await params;
+  const id = Number(idParam);
+
+  if (!id || Number.isNaN(id)) {
+    return <h1>Invalid profile id</h1>;
+  }
 
   const profile = await prisma.profiles.findUnique({
     where: { id },
   });
 
   if (!profile) {
-    return (
-      <main>
-        <div className="section">
-          <div className="container">
-            <h1>Profile not found</h1>
-          </div>
-        </div>
-      </main>
-    );
+    return <h1>Profile not found</h1>;
   }
 
   return (
     <main>
-      <div className="section">
-        <div className="container">
-          <h1>Edit Profile</h1>
-          <ProfileForm
-            mode="edit"
-            profileId={profile.id}
-            initialValues={profile}
-          />
-        </div>
-      </div>
+      <h1>Edit Profile</h1>
+      <ProfileForm profile={profile} />
     </main>
   );
 }
