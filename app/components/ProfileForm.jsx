@@ -151,13 +151,9 @@ export default function ProfileForm({
       }
 
       setTimeout(() => {
-        if (mode === "edit") {
-          router.push(`/profile/${profileId}`);
-        } else {
-          router.push("/");
-        }
-        router.refresh();
-      }, 1200);
+  router.push("/");
+  router.refresh();
+}, 1200);
     } catch (error) {
       setErrors(error.message || "Failed to submit form");
     } finally {
