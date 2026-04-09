@@ -1,5 +1,6 @@
 import "./globals.css";
 import NavBar from "../components/NavBar";
+import SessionProvider from "@/components/SessionProvider";
 
 export const metadata = {
   title: "Profile Project",
@@ -13,16 +14,12 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <header className="site-header">
-          <h1>Profile Project</h1>
+        <SessionProvider>
           <NavBar />
-        </header>
-
-        <main className="container">{children}</main>
-
-        <footer className="site-footer">
-          <p>© 2026 Spencer Burse</p>
-        </footer>
+          <main style={{ maxWidth: "1000px", margin: "0 auto", padding: "0 16px 32px" }}>
+            {children}
+          </main>
+        </SessionProvider>
       </body>
     </html>
   );

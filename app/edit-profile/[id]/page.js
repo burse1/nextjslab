@@ -1,3 +1,4 @@
+import { auth } from "@/auth";
 import prisma from "@/app/lib/prisma";
 import ProfileForm from "@/app/components/ProfileForm";
 
@@ -5,6 +6,13 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export default async function EditProfilePage({ params }) {
+  const session = await auth();
+
+  
+  if (!session?.user) {
+    return <h1>You must log in to edit a profile.</h1>;
+  }
+
   const { id: idParam } = await params;
   const id = Number(idParam);
 
