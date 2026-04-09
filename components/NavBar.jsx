@@ -29,17 +29,11 @@ export default function NavBar() {
           <>
             <span>{session.user.email}</span>
             <button
-              onClick={() => signOut({ callbackUrl: "/" })}
-              style={{
-                padding: "8px 12px",
-                border: "1px solid #ccc",
-                borderRadius: "6px",
-                background: "white",
-                cursor: "pointer",
-              }}
-            >
-              Sign Out
-            </button>
+  onClick={() => signOut()}
+  className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+>
+  Logout
+</button>
           </>
         ) : (
           <Link href="/auth/signin">Sign In</Link>
