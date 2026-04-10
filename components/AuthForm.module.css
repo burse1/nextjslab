@@ -133,11 +133,11 @@
   padding: 10px 14px;
   border: 1px solid #ccc;
   border-radius: 8px;
-  background: white;
+  background: black;
   cursor: pointer;
   font-size: 14px;
 }
 
 .oauthButton:hover {
-  background: #f5f5f5;
+  background: #696969;
 }
