@@ -13,7 +13,10 @@ export default function AuthForm() {
   const callbackUrl = searchParams.get("callbackUrl") || "/";
 
   const [isLogin, setIsLogin] = useState(true);
-  const [data, setData] = useState({ email: "", password: "" });
+  const [data, setData] = useState({
+    email: "",
+    password: "",
+  });
   const [errors, setErrors] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [statusMessage, setStatusMessage] = useState("");
@@ -96,40 +99,33 @@ export default function AuthForm() {
   };
 
   return (
-    <div className={styles.authPage}>
-      <h1>{isLogin ? "Sign In" : "Register"}</h1>
+    <div className={styles.container}>
+      <h1 className={styles.heading}>{isLogin ? "Sign In" : "Register"}</h1>
 
-      {statusMessage && <p className={styles.statusMessage}>{statusMessage}</p>}
+      {statusMessage && <p className={styles.message}>{statusMessage}</p>}
 
-      <form onSubmit={handleSubmit} className={styles.authForm}>
-        <div>
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            value={data.email}
-            onChange={handleChange}
-            required
-          />
-        </div>
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <label htmlFor="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          value={data.email}
+          onChange={handleChange}
+          required
+        />
 
-        <div>
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            value={data.password}
-            onChange={handleChange}
-            required
-          />
-        </div>
+        <label htmlFor="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          value={data.password}
+          onChange={handleChange}
+          required
+        />
 
         {errors && <p className={styles.error}>{errors}</p>}
 
-        <button
-          type="submit"
-          disabled={isSubmitting || !data.email || !data.password}
-        >
+        <button type="submit" disabled={isSubmitting}>
           {isSubmitting
             ? isLogin
               ? "Signing in..."
@@ -140,12 +136,37 @@ export default function AuthForm() {
         </button>
       </form>
 
-      <div className={styles.toggle}>
-        <p>{isLogin ? "Don't have an account?" : "Already have an account?"}</p>
-        <button type="button" onClick={handleToggle}>
-          {isLogin ? "Register" : "Sign In"}
-        </button>
-      </div>
+      {isLogin && (
+        <div className={styles.oauthButtons}>
+          <button
+            type="button"
+            onClick={() => signIn("github", { callbackUrl })}
+            className={styles.oauthButton}
+          >
+            Sign in with GitHub
+          </button>
+
+          <button
+            type="button"
+            onClick={() => signIn("google", { callbackUrl })}
+            className={styles.oauthButton}
+          >
+            Sign in with Google
+          </button>
+        </div>
+      )}
+
+      <p className={styles.toggleText}>
+        {isLogin ? "Don't have an account?" : "Already have an account?"}
+      </p>
+
+      <button
+        type="button"
+        onClick={handleToggle}
+        className={styles.toggleButton}
+      >
+        {isLogin ? "Register" : "Sign In"}
+      </button>
     </div>
   );
 }

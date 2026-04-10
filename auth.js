@@ -1,5 +1,7 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import GitHub from "next-auth/providers/github";
+import Google from "next-auth/providers/google";
 import bcrypt from "bcryptjs";
 import prisma from "@/app/lib/prisma";
 
@@ -7,6 +9,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   session: {
     strategy: "jwt",
   },
+
   providers: [
     Credentials({
       name: "Credentials",
@@ -38,7 +41,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           }
 
           return {
-            id: user.id,
+            id: String(user.id),
             email: user.email,
           };
         } catch (error) {
@@ -47,10 +50,18 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         }
       },
     }),
+
+    GitHub({
+      issuer: "https://github.com/login/oauth",
+    }),
+
+    Google,
   ],
+
   pages: {
     signIn: "/auth/signin",
   },
+
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
@@ -59,6 +70,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       }
       return token;
     },
+
     async session({ session, token }) {
       if (session.user && token) {
         session.user.id = token.id;
